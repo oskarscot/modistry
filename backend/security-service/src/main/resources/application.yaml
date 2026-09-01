@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: security-service
+  docker:
+    compose:
+      file: backend/infrastructure/compose.yaml
+
+  security:
+    oauth2:
+      client:
+        registration:
+          hytale:
+            client-id: ${HYTALE_CLIENT_ID}
+            client-secret: ${HYTALE_SECRET}
+            scope:
+              - openid
+              - hytale:profile
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          hytale:
+            issuer-uri: https://connect.accounts.hytale.com
+
+logging:
+  level:
+    org.springframework.security: trace

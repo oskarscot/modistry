@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: modistry-backend
+  docker:
+    compose:
+      file: backend/infrastructure/compose.yaml
