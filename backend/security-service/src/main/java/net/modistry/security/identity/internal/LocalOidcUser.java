@@ -5,7 +5,6 @@ import net.modistry.security.identity.LocalAccountPrincipal;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -18,10 +17,12 @@ public class LocalOidcUser implements OidcUser, LocalAccountPrincipal {
 
     private final AccountEntity account;
     private final OidcUser oidcUser;
+    private final Collection<? extends GrantedAuthority> authorities;
 
-    public LocalOidcUser(AccountEntity account, OidcUser oidcUser) {
+    public LocalOidcUser(AccountEntity account, OidcUser oidcUser, Collection<? extends GrantedAuthority> authorities) {
         this.account = account;
         this.oidcUser = oidcUser;
+        this.authorities = authorities;
     }
 
     @Override
@@ -46,7 +47,7 @@ public class LocalOidcUser implements OidcUser, LocalAccountPrincipal {
 
     @Override
     public @NonNull Collection<? extends GrantedAuthority> getAuthorities() {
-        return AuthorityUtils.createAuthorityList("ROLE_USER"); // TODO: load from db!
+        return authorities;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package net.modistry.security;
 
 import net.modistry.security.identity.AccountProvisionService;
+import net.modistry.security.identity.AuthorityRepository;
+import net.modistry.security.identity.UserAuthority;
 import net.modistry.security.identity.entity.UserAttributeDetails;
 import net.modistry.security.identity.internal.LocalOidcUser;
 import net.modistry.security.identity.type.HytaleProfile;
@@ -8,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -19,9 +22,11 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
 
     private final AccountProvisionService provisionService;
+    private final AuthorityRepository authorityRepository;
 
-    public WebSecurityConfig(AccountProvisionService provisionService) {
+    public WebSecurityConfig(AccountProvisionService provisionService, AuthorityRepository authorityRepository) {
         this.provisionService = provisionService;
+        this.authorityRepository = authorityRepository;
     }
 
     @Bean
@@ -45,10 +50,12 @@ public class WebSecurityConfig {
             var externalUser = delegate.loadUser(request);
             var accountDetails = mapUserDetails(request, externalUser);
             var account = provisionService.findOrCreate(accountDetails);
+            var authorities = authorityRepository.findAllByUserId(account.uuid()).stream()
+                    .map(UserAuthority::authority)
+                    .map(SimpleGrantedAuthority::new)
+                    .toList();
 
-            // TODO: load authorities and add into LocalOidcUser constructor
-
-            return new LocalOidcUser(account, externalUser);
+            return new LocalOidcUser(account, externalUser, authorities);
         };
     }
 

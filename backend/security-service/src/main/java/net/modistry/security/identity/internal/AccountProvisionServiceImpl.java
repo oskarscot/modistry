@@ -16,10 +16,12 @@ class AccountProvisionServiceImpl implements AccountProvisionService {
 
     private final AccountRepository accountRepository;
     private final LinkedAccountRepository linkedAccountRepository;
+    private final AuthorityRepository authorityRepository;
 
-    AccountProvisionServiceImpl(AccountRepository accountRepository, LinkedAccountRepository linkedAccountRepository) {
+    AccountProvisionServiceImpl(AccountRepository accountRepository, LinkedAccountRepository linkedAccountRepository, AuthorityRepository authorityRepository) {
         this.accountRepository = accountRepository;
         this.linkedAccountRepository = linkedAccountRepository;
+        this.authorityRepository = authorityRepository;
     }
 
     @Transactional
@@ -42,6 +44,7 @@ class AccountProvisionServiceImpl implements AccountProvisionService {
                 details.avatarUrl()
         ));
         linkedAccountRepository.save(LinkedAccountEntity.fromAttributeDetails(details, accountId));
+        authorityRepository.save(UserAuthority.create(accountId, "ROLE_USER"));
         return account;
     }
 }
