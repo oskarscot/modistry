@@ -16,4 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "backend"
 
-include("modistry-backend", "security-service")
+include("modistry-backend", "security-service", "modistry-gateway")
