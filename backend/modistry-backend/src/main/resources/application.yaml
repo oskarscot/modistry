@@ -4,3 +4,5 @@ spring:
   docker:
     compose:
       file: backend/infrastructure/compose.yaml
+server:
+  port: 8080

@@ -1,3 +1,20 @@
 spring:
   application:
     name: modistry-gateway
+
+  security:
+    oauth2:
+      client:
+        registration:
+          modistry:
+            client-id: modistry-gateway
+            client-secret: ${MODISTRY_GATEWAY_CLIENT_SECRET}
+            authorization-grant-type: authorization_code
+            scope:
+              - openid
+              - profile
+        provider:
+          modistry:
+            issuer-uri: http://localhost:9000
+server:
+  port: 8081

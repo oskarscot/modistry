@@ -1,3 +1,4 @@
+
 spring:
   application:
     name: security-service
@@ -24,3 +25,12 @@ spring:
 logging:
   level:
     org.springframework.security: trace
+server:
+  port: 9000
+
+modistry:
+  secuirty:
+    signing-key:
+      location: ${MODISTRY_SIGNING_KEYSTORE}
+      password: ${MODISTRY_SIGNING_KEYSTORE_PASSWORD}
+      alias: ${MODISTRY_SIGNING_KEY_ALIAS}
