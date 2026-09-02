@@ -1,6 +1,11 @@
 spring:
   application:
     name: modistry-backend
+
+  threads:
+    virtual:
+      enabled: true
+
   docker:
     compose:
       file: backend/infrastructure/compose.yaml

@@ -1,6 +1,9 @@
 spring:
   application:
     name: modistry-gateway
+  threads:
+    virtual:
+      enabled: true
 
   security:
     oauth2:
